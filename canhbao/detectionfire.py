@@ -46,6 +46,7 @@ class CameraDetectionFire(object):
   def run_model_img(self, args, frame, model):
     output = model(frame)
     pred = torch.round(torch.sigmoid(output))
+    print(torch.sigmoid(output))
     return pred
 
   ##########################################################################
@@ -122,17 +123,25 @@ class CameraDetectionFire(object):
     # drawing prediction output
 
     sum = 0
+    localtime = time.localtime(time.time())
+
     height, width, _ = frame.shape
     if prediction == 1:
+      print("cul",prediction)
       print(f'\t\t|____No-Fire | fps {fps_frame}')
-      cv2.rectangle(frame, (0, 0), (width, height), (0, 0, 255), 2)
+      #cv2.rectangle(frame, (0, 0), (width, height), (0, 0, 255), 10)
       cv2.putText(frame, 'No-Fire', (int(width / 16), int(height / 4)),
-                  cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+                  cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 00), 2, cv2.LINE_AA)
     else:
+      print("cul", prediction)
       print(f'\t\t|____Fire | fps {fps_frame}')
-      cv2.rectangle(frame, (0, 0), (width, height), (0, 255, 0), 2)
+      if localtime.tm_sec % 2 == 0:
+        cv2.rectangle(frame, (0, 0), (width, height), (0, 0, 255), 30)
       cv2.putText(frame, 'Fire', (int(width / 16), int(height / 4)),
-                  cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+                  cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+
+
+
       # path = r'D:/PYCHARM/DetectionFireflash/image/img'
       # # os.chdir(directory)
       # cv2.imwrite(path + str(num) + ".jpg", frame)

@@ -1,8 +1,9 @@
 
 import cv2
 import time
-from canhbao.base_camera import BaseCamera
 from canhbao.detectionfire import CameraDetectionFire
+from canhbao.base_camera import BaseCamera
+
 
 
 class Camera(BaseCamera):
@@ -27,10 +28,12 @@ class Camera(BaseCamera):
             # detection fire
             Test = CameraDetectionFire()
             frame = Test.dectection_fire(frame, num_frames)
+
             time_now = time.time()
             total_time += time_now - time_start
             fps = num_frames / total_time
                       # uncomment below to see FPS of camera stream
             cv2.putText(frame, "FPS: %.2f" % fps, (int(20), int(40 * 5e-3 * frame.shape[0])), 0, 2e-3 * frame.shape[0],(255, 255, 255), 2)
+
 
             yield cam_id, frame

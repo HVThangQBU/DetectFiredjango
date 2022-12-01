@@ -1,19 +1,32 @@
+import sys
 import time
 from importlib import import_module
 import cv2
 from django.http import HttpResponse, StreamingHttpResponse
 from django.template import loader
+from canhbao.models.models import Camera
+from django.template.response import TemplateResponse
 
 
 def index(request):
+  allcam = Camera.objects.all().values()
   template = loader.get_template('home.html')
-  return HttpResponse(template.render({}, request))
+  context = {
+    'allcam': allcam,
+  }
+  return HttpResponse(template.render(context, request))
 
 
-def detailCamera(request):
+def detailCamera(request, id):
   template = loader.get_template('detail-camera.html')
-  return HttpResponse(template.render({}, request))
+  print('8329uewijds3ueiwdjsn983weuijdsk83uiewjdsn38uwiejdsn', id)
+  camera = Camera.objects.get(id_cam=id)
+  print("coicam",camera)
 
+  context = {
+    'camera': camera,
+  }
+  return HttpResponse(template.render(context, request))
 
 def gen(camera_stream, feed_type, device):
   """Video streaming generator function."""

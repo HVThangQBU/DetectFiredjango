@@ -5,5 +5,5 @@ from . import views
 urlpatterns = [
   path('', views.index),
   path('video_feed/<feed_type>/<device>/', views.video_feed, name='video_feed'),
-  path('detail_camera/', views.detailCamera, name='detail_camera')
+  path('detail_camera/<int:id>', views.detailCamera, name='detail_camera')
 ]

@@ -25,9 +25,8 @@
 
 <div class="clearfix">
   <div class="img-container">
-        <p align="center">Camera stream 1</p>
-      <input type="hidden" name="id_cam" value="0">
-        <img src="{% url 'video_feed' feed_type='camera' device='{{ id }}'%}" class="center"  style="border:1px solid black;width:100%" alt="Camera stream 1">
+        <p align="center">{{ camera.name_cam }}</p>
+        <img src="{% url 'video_feed' feed_type='camera' device=camera.id_cam  %}" class="center"  style="border:1px solid black;width:100%" alt="Camera stream 1">
   </div>
 
 </div>

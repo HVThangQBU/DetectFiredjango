@@ -109,6 +109,7 @@ class BaseCamera:
     def server_thread(cls, unique_name, port):
         device = unique_name[1]
 
+
         image_hub = imagezmq.ImageHub(open_port='tcp://*:{}'.format(port))
         frames_iterator = cls.server_frames(image_hub)
 
