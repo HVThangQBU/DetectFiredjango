@@ -22,12 +22,11 @@ class Camera(BaseCamera):
 
             image_hub.send_reply(b'OK')  # this is needed for the stream to work with REQ/REP pattern
 
-
-
+            print("camera ID", cam_id)
             num_frames += 1
             # detection fire
             Test = CameraDetectionFire()
-            frame = Test.dectection_fire(frame, num_frames)
+            frame = Test.dectection_fire(frame, cam_id)
 
             time_now = time.time()
             total_time += time_now - time_start

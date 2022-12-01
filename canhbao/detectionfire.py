@@ -3,8 +3,10 @@ from PIL import Image
 import time
 import yaml
 import torch
+import os, datetime;
 import torchvision.transforms as transforms
 from canhbao.models import shufflenetv2
+from canhbao.models.models import Detection
 
 
 class CameraDetectionFire(object):
@@ -68,7 +70,7 @@ class CameraDetectionFire(object):
                   cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
     return frame
 
-  def dectection_fire(self, frame, num):
+  def dectection_fire(self, frame, cam_id):
     with open('canhbao/config.yml') as f:
       config = yaml.load(f, Loader=yaml.FullLoader)
     args = config
@@ -135,10 +137,28 @@ class CameraDetectionFire(object):
     else:
       print("cul", prediction)
       print(f'\t\t|____Fire | fps {fps_frame}')
+      try:
+        datestring = datetime.datetime.now().strftime("%Y-%m-%d");
+        print(datestring)
+        os.mkdir("canhbao/media/detect_image/" + cam_id)
+        os.mkdir("canhbao/media/detect_image/" + cam_id + "/" + datestring);
+      except:
+        print("An exception occurred")
+      today = datetime.datetime.now()
+      print(today.strftime("%Y-%m-%d"))
       if localtime.tm_sec % 2 == 0:
         cv2.rectangle(frame, (0, 0), (width, height), (0, 0, 255), 30)
+        out_path = "canhbao/media/detect_image/" + cam_id + "/" + datestring
+        frame_name = datetime.datetime.now().strftime("%d %H-%M-%S") + '.jpg'
+        cv2.imwrite(os.path.join(out_path, frame_name), frame)
+        name = "Phat hien chay"
+        content = " co dam chay"
+        datefull = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S");
+        dec = Detection.objects.create(name_detect=name, name_cam=cam_id, content=content, image_detect= "canhbao/media/detect_image/" + cam_id + "/" + datestring + "/" + frame_name, time_detect=datefull)
+        dec.save()
       cv2.putText(frame, 'Fire', (int(width / 16), int(height / 4)),
                   cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+
 
 
 

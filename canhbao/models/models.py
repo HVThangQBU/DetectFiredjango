@@ -6,11 +6,13 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Camera(models.Model):
-
   id_cam = models.AutoField(primary_key=True)
   name_cam = models.CharField(max_length=100)
-  location = location = models.CharField(max_length=150, blank=True)
+  name_location = models.CharField(max_length=100,blank=True)
+  location  = models.CharField(max_length=150, blank=True)
   user = models.CharField(max_length=100)
+
+
 
 
   def __str__(self):
