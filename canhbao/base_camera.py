@@ -82,6 +82,8 @@ class BaseCamera:
     @classmethod
     def get_frame(cls, unique_name):
         """Return the current camera frame."""
+        import threading
+        print("get_frames: " + str(threading.current_thread().ident))
         BaseCamera.last_access[unique_name] = time.time()
 
         # wait for a signal from the camera thread
@@ -108,7 +110,6 @@ class BaseCamera:
     @classmethod
     def server_thread(cls, unique_name, port):
         device = unique_name[1]
-
 
         image_hub = imagezmq.ImageHub(open_port='tcp://*:{}'.format(port))
         frames_iterator = cls.server_frames(image_hub)
