@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <title>Custom Markers</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    <script type="module" src="./index.js"></script>
+    <style> 
+        #map {
+            height: 100%;
+          }
+          
+          /* 
+           * Optional: Makes the sample page fill the window. 
+           */
+          html,
+          body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+          }
+          
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <!-- 
+     The `defer` attribute causes the callback to execute after the full HTML
+     document has been parsed. For non-blocking uses, avoiding race conditions,
+     and consistent behavior across browsers, consider loading using Promises
+     with https://www.npmjs.com/package/@googlemaps/js-api-loader.
+    -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
+      defer
+    ></script>
+    <script>
+ // The following example creates five accessible and
+// focusable markers.
+function initMap() {
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 12,
+      center: { lat: 17.48156965996678, lng: 106.60802059822016 },
+      
+    });
+   
+    // Set LatLng and title text for the markers. The first marker (Boynton Pass)
+    // receives the initial focus when tab is pressed. Use arrow keys to
+    // move between markers; press tab again to cycle through the map controls.
+    const tourStops = [
+      [{ lat: 17.48156965996678, lng: 106.60802059822016, fillColor: "blue",},  "Camera 1, Nguyễn Văn Linh, Đồng Phú, Đồng Hới, Quảng Bình, Vietnam, <a href='https://goo.gl/maps/kERkFE8nKNaetcuv8'>Xem ở bản đồ</a>"],
+      [{ lat: 17.484147000678061, lng:   106.60402033675322 }, "Camera 2, 1B Hữu Nghị, Đồng Phú, Đồng Hới, Quảng Bình, Vietnam, <a href='https://goo.gl/maps/2dTy4rEjyYERhCF78'>Xem ở bản đồ</a>"],
+      [{ lat: 17.483043, lng:  106.603182 }, "Camera 3, Bắc Lý, Đồng Phú, Đồng Hới, Quang Binh Province, <a href='https://goo.gl/maps/ibGQGMkH2MU15YQj9'>Xem ở bản đồ</a>"],
+      [{ lat: 17.481195041816864, lng: 106.6067649034602 }, "Camera 4, FJJ4+CMH, Đồng Phú, Đồng Hới, Quảng Bình, Vietnam,  <a href='https://goo.gl/maps/6qxq96DpYUNtbdTk8'>Xem ở bản đồ</a>"],
+    ];
+
+    // Create an info window to share between markers.
+    const infoWindow = new google.maps.InfoWindow();
+ 
+    // Create the markers.
+    tourStops.forEach(([position, title], i) => {
+      const marker = new google.maps.Marker({
+        position,
+        map,
+        title: `${i + 1}. ${title}`,
+        label: `${i + 1}`,
+        optimized: false,
+      });
+  
+      // Add a click listener for each marker, and set up the info window.
+      marker.addListener("click", () => {
+        infoWindow.close();
+        infoWindow.setContent(marker.getTitle());
+        infoWindow.open(marker.getMap(), marker);
+      });
+    });
+  }
+  
+  window.initMap = initMap;
+    </script>
+  </body>
+</html>

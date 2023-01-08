@@ -1,0 +1,135 @@
+
+*{
+   padding: 0;
+   margin: 0;
+   box-sizing: border-box;
+
+}
+html{
+   scroll-behavior: smooth;
+   font-family: "Times New Roman", Times, serif;
+
+}
+body {
+   max-height: 100vh;
+   overflow: hidden;
+}
+#main {
+   
+}
+.header {
+   background-color: rgb(2, 56, 56);
+   top: 0;
+   left: 0;
+   right: 0;
+   z-index: 1;
+   height: 40px;
+
+}
+#nav {
+   display: inline-block;
+}
+#nav > li {
+   display: inline-block;
+}
+#nav li {
+   position: relative;
+}
+#nav > li > a {
+   color: aliceblue;
+   text-transform: uppercase;
+}
+#nav li a {
+   text-decoration: none;
+   line-height: 40px;
+   padding: 0 20px;
+}
+#nav li:hover > a{
+   color: #000;
+   background-color: #ccc;
+   display: block;
+}
+.content {
+   max-width: 100%;
+   position: relative;
+
+}
+#content-center {
+   display: flex;
+}
+#content-right {
+   width: 30%;
+   border: 2px solid;
+  
+}
+#content-left {
+   width: 40%;  
+   border: 2px solid;
+}
+.center {
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+}
+.camera {
+   width: 100%;
+   position: relative;
+   padding: 5px 5px 4px 5px;
+   margin: 5px 5px 0px 5px;
+  
+}
+#map {
+   width: 100%;
+   margin-bottom: 10px;
+   padding: 10px;
+
+}
+.log-canhbao-title, .log-canhbao {
+   background-color: aquamarine;
+   width: 100%; 
+   display: flex;
+   position: relative;
+   text-align: center;
+}
+.log-canhbao-title {
+   height: 60px;
+   line-height: 20px;
+   margin-bottom: 5px;
+}
+.log-canhbao{
+   margin-bottom: 5px;
+   cursor: pointer;
+   
+}
+.log-canhbao:hover{
+   background-color: #ccc;
+   
+}
+.log-canhbao:hover .hover{
+   background-color: #ccc;
+   
+}
+.log {
+   margin-top: 10px;
+   padding: 5px;
+   margin: 50px;
+   font-size: 20px;
+}
+.log > pre{
+   color: rgb(238, 19, 19);
+   padding: 5px;
+}
+.log > pre > span{
+   color: rgb(5, 3, 4);
+   
+}
+.log-content > h3 {
+   text-align: center;
+}
+.log-content {
+   width: 50%;
+   text-align: left;
+}
+.log-img {
+   width: 50%;
+}
