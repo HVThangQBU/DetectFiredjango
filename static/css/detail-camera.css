@@ -11,11 +11,14 @@ html{
 
 }
 body {
-   max-height: 100vh;
-   overflow: hidden;
+ 
+   /* overflow: hidden; */
+   margin: 0   ;
 }
 #main {
-   
+   display: block;
+   height: 100%;
+   width: 100%;
 }
 .header {
    background-color: rgb(2, 56, 56);
@@ -23,8 +26,15 @@ body {
    left: 0;
    right: 0;
    z-index: 1;
-   height: 40px;
+   height: 5%;
+   position: relative;
 
+}
+h3 {
+      color: rgb(126, 26, 51);
+      text-transform: uppercase;
+      margin: 15px 5px 5px 5px;
+      text-align: center;
 }
 #nav {
    display: inline-block;
@@ -50,21 +60,25 @@ body {
    display: block;
 }
 .content {
-   max-width: 100%;
+   width: 100%;
+   height: 90%;
    position: relative;
 
 }
 #content-center {
    display: flex;
+   margin-top: 30px !important;
+   width: 100%;
 }
-#content-right {
-   width: 30%;
-   border: 2px solid;
+.content-right {
+   width: 30% !important;
+   position: relative;
   
 }
 #content-left {
    width: 40%;  
-   border: 2px solid;
+   height: 100%;
+   position: relative;
 }
 .center {
    display: block;
@@ -73,19 +87,19 @@ body {
 }
 .camera {
    width: 100%;
-   position: relative;
    padding: 5px 5px 4px 5px;
    margin: 5px 5px 0px 5px;
-  
+   height: 50%;
 }
 #map {
    width: 100%;
    margin-bottom: 10px;
    padding: 10px;
-
+   position: relative;
+   height: 50%;
 }
 .log-canhbao-title, .log-canhbao {
-   background-color: aquamarine;
+   /* background-color: aquamarine; */
    width: 100%; 
    display: flex;
    position: relative;
@@ -132,4 +146,15 @@ body {
 }
 .log-img {
    width: 50%;
+}
+ .footer {
+   background-color: aqua;
+   height: 5%;
+} 
+.camera-footer {
+   padding-top: 16px!important;
+   padding-bottom: 16px!important;
+   color: #fff!important;
+   background-color: #000!important; 
+   text-align: center!important;
 }
