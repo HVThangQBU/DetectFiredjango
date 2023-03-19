@@ -92,4 +92,4 @@ class Camera(BaseCamera):
             cv2.putText(frame, "FPS: %.2f" % fps, (int(20), int(40 * 5e-3 * frame.shape[0])), 0, 2e-3 * frame.shape[0],(255, 255, 255), 2)
 
 
-            yield cam_id, frame
+            yield cam_id, frame, prediction
