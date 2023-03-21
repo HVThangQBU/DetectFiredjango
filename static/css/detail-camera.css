@@ -147,14 +147,4 @@ h3 {
 .log-img {
    width: 50%;
 }
- .footer {
-   background-color: aqua;
-   height: 5%;
-} 
-.camera-footer {
-   padding-top: 16px!important;
-   padding-bottom: 16px!important;
-   color: #fff!important;
-   background-color: #000!important; 
-   text-align: center!important;
-}
+ 
