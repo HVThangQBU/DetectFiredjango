@@ -1,64 +1,27 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<meta charset="UTF-8">
-<title>Home</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-{% comment %} <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> {% endcomment %}
-<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+{% block title %}Camera detail{% endblock %}
 
-
-<link rel="stylesheet" href="{% static '/css/detail-camera.css' %}">
-<style>
-  label {
-    display: inline-block;
-    font: 1rem 'Fira Sans', sans-serif;
-}
-
-input,
-label {
-    margin: 0.4rem 0;
-}
-
-</style>
-
-<body>
+{% block content %}
 <div id="main">
 <input type="hidden" id ="idcamera" value="{{camera.id_cam}}">
+<input type="hidden" id ="name-camera" value="{{camera.name_cam}}">
+
 <!-- Navbar --> 
-  <div class="header">
-    <ul id="nav">
-        <li> <a href="#">Home</a></li>
-        <li><a href="">Camera</a> </li>
-    </ul>
-  </div>
   <div class="content">
     <div id="content-center">
-      <div id="content-left">
-        <div class="camera">
-          <img src="{% url 'video_feed' feed_type='camera' device=camera.id_cam  %}"  alt="Camera stream 1" class="center" style="width:100%; height:50%;">
-          <h3 align="center">{{ camera.name_cam}} {{ camera.name_location }}</h3>
-        </div>
-        <div id="map">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3805.5426005532345!2d106.6049806507262!3d17.
-          481593204623127!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31475726fe988adb%3A0xd82a331339abca55!2sQuang%20Binh%20University
-          !5e0!3m2!1sen!2s!4v1671960944672!5m2!1sen!2s" width="100%"    height="300px" style="border:0;" allowfullscreen="" loading="lazy" position="relative"                  referrerpolicy="no-referrer-when-downgrade"></iframe>
-          <h3 align="center">Vị trí camera</h3>
-        </div>
-      </div>
-      <div class="content-right" id="content-log">
+      <div class="content-right" id="content-log" style="width:80% !important">
         <div class="abc">
           <div class="camera big-img">
-              <img src="http://127.0.0.1:8000/media/{{detect_last.image_detect}}" alt="hinhanh" class="center" style="width:500px; height: 400px;">
+              <img src="http://127.0.0.1:8000/media/{{detect_last.image_detect}}" alt="hinhanh" class="center" style="width:100%; height: 800px;">
               <h3 align="center">Hình ảnh cảnh báo</h3>
             </div>
-          <div class="log-detail">
+          {% comment %} <div class="log-detail">
               {% comment %} <div class="log"> {% endcomment %}
-                  <p class="content-detect-name"> Tên cảnh báo:  <span>{{ detect_last.name_detect }}</span></p>
-                  <p class="content-detect-time"> Thời gian:     <span>{{ detect_last.time_detect }}</span></p>
-                  <p class="content-detect-location"> Vị trí:        <span>Đồng hới</span></p>
-              {% comment %} </div> {% endcomment %}
-          </div>
+                  {% comment %} <p class="content-detect-name"> Tên cảnh báo:  <span>{{ detect_last.name_detect }}</span></p>
+                  <p class="content-detect-time"> Thời gian:     <span>{{ detect_last.time_detect }}</span></p> {% endcomment %}
+              {% comment %} </div> 
+          </div> {% endcomment %}
 
         </div>
       </div>
@@ -85,8 +48,25 @@ label {
             </div>
               <input id="submit-time" type="submit">
           </div>   {% endcomment %}
+          <form action="" method="POST">
+            {% csrf_token %}
+          <div style="display:flex">
+            <div>
+              <label for="start-picker">Select Start Date and Time:</label>
+              <input type="text" id="start-picker" placeholder="Select Start Date and Time">
+            </div>
+          
+            <div>
+                <label for="end-picker">Select End Date and Time:</label>
+                <input type="text" id="end-picker" placeholder="Select End Date and Time">
+            </div>
+          
+            <button id="search-btn" >Search</button>
+          </div>
+        </form>
           <div id="display-log" style="overflow-y: auto; max-height: 85vh;">
-            {% for det in detect reversed  %}
+          
+            {% for det in detect  %}
               <div class="log-canhbao">
                 <div class="log-img">
                   <img src="http://127.0.0.1:8000/media/{{det.image_detect}}" alt="" class="center" style="width:150px; height: 100px;">
@@ -97,20 +77,18 @@ label {
                     <p class="log-content-location"> Vị trí:        <span>Đồng hới</span></p>
                 </div>  
               </div>  
+             
             {% endfor %}
+            <div id="search-results"></div>
           </div>
-          <h3>Lịch sử cảnh báo </h3> <a href="">Xem lịch sử</a>
         </div>
       </div>
     </div>
   </div>
-  <footer class="camera-footer">
-    <p>Powered by <a href="" title="Thắng Hoàng" target="_blank" class="w3-hover-text-green">hoàng thắng</a></p>
-  </footer>
 </div>
 <script>
 // change content div
- $(document).ready(function() {
+ {% comment %} $(document).ready(function() {
  
   $('.log-canhbao').click(function(){
       var $divCanhBao = $(this);
@@ -124,23 +102,29 @@ label {
       $('.log-detail > .content-detect-time').text($contentTime);
       $('.big-img > img').attr('src', $smallImg);
   });
-  loadData();
-
-  document.getElementById("time-start").value = '2022-06-01T08:30';
-  document.getElementById("time-end").value = '2023-06-01T08:30';
-  $('#submit-time').click(function(){
-    const dateCon = document.querySelector('input[type="datetime-local"]').value;
-    var id = document.getElementById("time-end").value;
-    console.log(dateCon, id,776877);
-});
   
-}); 
+});  {% endcomment %}
+
+
+$(document).on('click', '.log-canhbao', function(){
+  var $divCanhBao = $(this);
+  console.log($divCanhBao)
+  var $contentName = $divCanhBao.find('.log-content > .log-content-name').text();
+  var $contentTime = $divCanhBao.find('.log-content > .log-content-time').text();
+  var $smallImg = $divCanhBao.find('.log-img > img').attr('src');
+  console.log(1,$divCanhBao.find('.log-content > .log-content-time').text())
+  //console.log(1,$divCanhBao.find('.log-img > img').attr('src'))
+  $('.log-detail > .content-detect-name').text($contentName);
+  $('.log-detail > .content-detect-time').text($contentTime);
+  $('.big-img > img').attr('src', $smallImg);
+});
+
 // {% comment %} setInterval(function(){
 //   console.log(2)
 //   $('#load-content').load('/templates/detail-camera.html');
 // }, 1000) /* time in milliseconds (ie 2 seconds)*/ {% endcomment %}
 
-var loadData = function() {
+{% comment %} var loadData = function() {
   var id = document.getElementById("idcamera").value;
   console.log(12312,id);
   // GET AJAX request
@@ -163,7 +147,7 @@ var loadData = function() {
                 dct.name_detect + "</span></p><p class='log-content-time'> Thời gian: <span>" +
                dct.time_detect + "</span></p><p class='log-content-location'> Vị trí:        <span>Đồng hới</span></p></div> </div>";
           $("#display-log").prepend(html);                 
-         setTimeout(loadData, 2000);
+     //    setTimeout(loadData, 2000);  
         
     
       },
@@ -171,8 +155,106 @@ var loadData = function() {
           console.log(123,error)
       }
   })
-};
+}; {% endcomment %}
 
 </script>
-</body>
-</html>
+
+<script>
+  var startPicker = flatpickr("#start-picker", {
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+      time_24hr: true,
+      defaultDate: new Date(),
+      minuteIncrement: 1,
+      onClose: function(selectedDates, dateStr, instance) {
+          // Set the minimum date for the end picker to the selected date
+          endPicker.set("minDate", selectedDates[0]);
+      }
+  });
+  
+  var endPicker = flatpickr("#end-picker", {
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+      time_24hr: true,
+      defaultDate: new Date(),
+      minuteIncrement: 1,
+      onClose: function(selectedDates, dateStr, instance) {
+          // Set the maximum date for the start picker to the selected date
+          startPicker.set("maxDate", selectedDates[0]);
+      }
+  });
+
+
+  var searchBtn = document.getElementById("search-btn");
+  searchBtn.addEventListener("click", function(event) {
+    event.preventDefault();
+
+  var startDate = document.getElementById("start-picker").value;
+  var endDate = document.getElementById("end-picker").value;
+  var nameCamera = document.getElementById("name-camera").value;
+  console.log("Selected start date: " + startDate);
+  console.log("Selected end date: " + endDate);
+  console.log("NAME CAM<: " + nameCamera);
+  
+  
+    // Send AJAX request to server
+  var xhr = new XMLHttpRequest();
+  
+  xhr.open("POST", "{% url 'search_detection' %}");
+  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      // Update UI with search results
+      var detections = JSON.parse(xhr.responseText);
+      console.log(detections);
+
+      if (detections.length > 0) {
+        // Display search results
+        for (var i = 0; i < detections.length; i++) {
+          var det = detections[i];
+          var formattedTime = new Date(det.time_detect).toLocaleString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+          });
+
+         
+    
+            var html =   " <div class='log-canhbao'><div class='log-img'>"
+              + "<img src='" + {{ MEDIA_URL }} + det.image_detect + "' alt='' class='center' style='width:150px; height: 100px;'></div><div class='log-content'><p class='log-content-name'> Tên cảnh báo:  <span>" +
+                det.name_detect + "</span></p><p class='log-content-time'> Thời gian: <span>" +
+                  formattedTime + "</span></p><p class='log-content-location'> Vị trí:        <span>Đồng hới</span></p></div> </div>";
+          $("#display-log").prepend(html);
+
+
+          
+        }
+      } else {
+        // Display message if no results found
+        searchResults.innerHTML = "<p>No results found.</p>";
+      }
+      // ...
+    }
+  };
+  xhr.send(JSON.stringify({start_time: startDate, end_time: endDate, name_cam: nameCamera }));
+});
+</script>
+
+{% endblock %}
+
+{% block extra_css %}
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+{% comment %} <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> {% endcomment %}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<link rel="stylesheet" href="{% static '/css/detail-camera.css' %}">
+
+
+{% endblock %}
