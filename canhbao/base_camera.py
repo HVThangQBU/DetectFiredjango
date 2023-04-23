@@ -1,6 +1,9 @@
 import time
 import threading
 import imagezmq
+import logging
+
+logger = logging.getLogger(__name__)
 
 try:
     from greenlet import getcurrent as get_ident
@@ -16,6 +19,7 @@ class CameraEvent:
     """An Event-like class that signals all active clients when a new frame is
     available.
     """
+
     def __init__(self):
         self.events = {}
 
@@ -71,8 +75,9 @@ class BaseCamera:
             BaseCamera.last_access[self.unique_name] = time.time()
 
             # start background frame thread
-            BaseCamera.threads[self.unique_name] = threading.Thread(target=self._thread,
-                                                                    args=(self.unique_name, port_list))
+            BaseCamera.threads[self.unique_name] = threading.Thread(
+                target=self._thread, args=(self.unique_name, port_list)
+            )
             BaseCamera.threads[self.unique_name].start()
 
             # wait until frames are available
@@ -83,6 +88,7 @@ class BaseCamera:
     def get_frame(cls, unique_name):
         """Return the current camera frame."""
         import threading
+
         print("get_frames: " + str(threading.current_thread().ident))
         BaseCamera.last_access[unique_name] = time.time()
 
@@ -94,50 +100,61 @@ class BaseCamera:
 
     @staticmethod
     def frames():
-        """"Generator that returns frames from the camera."""
-        raise RuntimeError('Must be implemented by subclasses')
+        """ "Generator that returns frames from the camera."""
+        raise RuntimeError("Must be implemented by subclasses")
 
     @staticmethod
     def yolo_frames(image_hub, unique_name):
-        """"Generator that returns frames from the camera."""
-        raise RuntimeError('Must be implemented by subclasses')
+        """ "Generator that returns frames from the camera."""
+        raise RuntimeError("Must be implemented by subclasses")
 
     @staticmethod
     def server_frames(image_hub):
-        """"Generator that returns frames from the camera."""
-        raise RuntimeError('Must be implemented by subclasses')
+        """ "Generator that returns frames from the camera."""
+        raise RuntimeError("Must be implemented by subclasses")
 
     @classmethod
     def server_thread(cls, unique_name, port):
         device = unique_name[1]
 
-        image_hub = imagezmq.ImageHub(open_port='tcp://*:{}'.format(port))
+        image_hub = imagezmq.ImageHub(open_port="tcp://*:{}".format(port))
         frames_iterator = cls.server_frames(image_hub)
 
         try:
             for cam_id, frame, prediction in frames_iterator:
+
                 BaseCamera.frame[unique_name] = cam_id, frame, prediction
                 BaseCamera.event[unique_name].set()  # send signal to clients
+                print("log",88888)
                 time.sleep(0)
-                if time.time() - BaseCamera.last_access[unique_name] > 5:
-                    frames_iterator.close()
-                    image_hub.zmq_socket.close()
-                    print('Closing server socket at port {}.'.format(port))
-                    print('Stopping server thread for device {} due to inactivity.'.format(device))
-                    pass
+                # if time.time() - BaseCamera.last_access[unique_name] > 5:
+                #     print("log 1234",9999999)
+                #     frames_iterator.close()
+                #     image_hub.zmq_socket.close()
+                #     print("Closing server socket at port {}.".format(port))
+                #     print(
+                #         "Stopping server thread for device {} due to inactivity.".format(
+                #             device
+                #         )
+                #     )
+                #     pass
+
         except Exception as e:
+            print("log",123455555555)
             frames_iterator.close()
             image_hub.zmq_socket.close()
-            print('Closing server socket at port {}.'.format(port))
-            print('Stopping server thread for device {} due to error.'.format(device))
+            print("Closing server socket at port {}.".format(port))
+            print("Stopping server thread for device {} due to error.".format(device))
             print(e)
 
     @classmethod
     def _thread(cls, unique_name, port_list):
         feed_type, device = unique_name
-        if feed_type == 'camera':
+        if feed_type == "camera":
             port = port_list[int(device)]
-            print('Starting server thread for device {} at port {}.'.format(device, port))
+            print(
+                "Starting server thread for device {} at port {}.".format(device, port)
+            )
             cls.server_thread(unique_name, port)
 
         # elif feed_type == 'yolo':

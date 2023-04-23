@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}Home{% endblock %}
 
-   
+
 
 {% block content %}
 <div class="container" style="max-width: none">
@@ -11,13 +11,14 @@
         <button onclick="showVideos(6)">6</button>
         <button onclick="showVideos(3)">3</button>
         <button onclick="showVideos(1)">1</button>
+       
     </div>
     <div class="video-grid">
 
         {% for x in allcam %}
         <div class="video">
-            <a href="detail_camera/{{ x.id_cam }}">
-                <img src="{% url 'video_feed' feed_type='camera' device=x.id_cam %}" class="center"  style="border:1px solid black;width:100%" alt="Camera stream 1">
+            <a href="detail_camera/{{ forloop.counter0 }}">
+                <img src="{% url 'video_feed' feed_type='camera' device=forloop.counter0 %}" class="center"  style="border:1px solid black;width:100%" alt="Camera stream 1">
             <h2>{{ x.name_cam }}</h2>
             </a>
         </div>
@@ -25,44 +26,44 @@
 
         <div class="video">
             <a href="#">
-                <img src="{% static 'img.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
+                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
             <h2>Video 3</h2>
             </a>
         </div>
         <div class="video">
             <a href="#">
-                <img src="{% static 'img.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
+                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
                 <h2>Video 4</h2>
             </a>
-            
+
         </div>
         <div class="video">
             <a href="#">
-                <img src="{% static 'img.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
+                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
                 <h2>Video 5</h2>
             </a>
         </div>
         <div class="video">
             <a href="#">
-                <img src="{% static 'img.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
+                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
                 <h2>Video 6</h2>
             </a>
         </div>
         <div class="video">
             <a href="#">
-                <img src="{% static 'img.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
+                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
                 <h2>Video 7</h2>
-            </a>     
+            </a>
         </div>
         <div class="video">
             <a href="#">
-                <img src="{% static 'img.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
+                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
                 <h2>Video 8</h2>
             </a>
         </div>
         <div class="video">
             <a href="#">
-                <img src="{% static 'img.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
+                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
                 <h2>Video 9</h2>
             </a>
         </div>
@@ -75,17 +76,17 @@
   function showVideos(num) {
     // Lấy tất cả các video trên trang
     const videos = document.querySelectorAll('.video');
-    
+
     // Ẩn tất cả các video
     videos.forEach(video => {
       video.style.display = 'none';
     });
-    
+
     // Hiển thị số lượng video tương ứng
     for (let i = 0; i < num; i++) {
       videos[i].style.display = 'block';
     }
-    
+
     // Cập nhật trạng thái của các nút điều chỉnh hiển thị
     const buttons = document.querySelectorAll('.button-container button');
     buttons.forEach(button => {
@@ -95,7 +96,7 @@
         button.classList.remove('active');
       }
     });
-    
+
     // Căn giữa các video còn lại (nếu có)
     const remainingVideos = document.querySelectorAll('.video:not(:first-child):not(:nth-child(2)):not(:nth-child(3))');
     remainingVideos.forEach(video => {
@@ -113,7 +114,7 @@
       max-width: 1200px;
       padding: 20px;
     }
-    
+
     /* Thanh Navigation */
     nav {
       background-color: #333;
@@ -122,7 +123,7 @@
       justify-content: space-between;
       padding: 10px;
     }
-    
+
     /* Khung ảnh */
     .video-grid {
       display: grid;
@@ -135,7 +136,7 @@
       padding: 20px;
       text-align: center;
     }
-    
+
     /* Footer */
     footer {
       background-color: #333;
@@ -143,7 +144,7 @@
       padding: 10px;
       text-align: center;
     }
-    
+
     /* Nút điều chỉnh hiển thị */
     .button-container {
       margin-bottom: 20px;

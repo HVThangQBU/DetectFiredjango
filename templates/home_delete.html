@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="center">
+</div>
+  <div style="margin-left: 90%;
+    font-size: 20px;"><button type="button" onclick="display()" id="display"><ion-icon name="grid-sharp"></ion-icon></button></div>
+  <div class="list-camera">
+    {% for x in allcam %}
+      <div class="camera-item" id= "img_item3" style="background-color:yellow;">
+        <p align="center">{{ x.name_cam }}</p>
+        <div class="content-bottom">
+          <a href="detail_camera/{{ x.id_cam }}">
+            <img src="{% url 'video_feed' feed_type='camera' device=x.id_cam %}" class="center"  style="border:1px solid black;width:100%" alt="Camera stream 1">
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+{#      <div class="camera-item" id="img_item4" style="background-color:pink;">#}
+{#        <p align="center">Camera stream 2</p>#}
+{#        <div class="content-bottom">#}
+{#          <a href="detail_camera/1">#}
+{#            <img src="{% url 'video_feed' feed_type='camera' device=1 %}" class="center"  style="border:1px solid black;width:100%" alt="Camera Stream 2">#}
+{#          </a>#}
+{#        </div>#}
+{#      </div>#}
+
+      <div class="camera-item" id="img_item" style="background-color:yellow";>
+        <p style="text-align: center">Camera stream 1</p>
+        <div class="content-bottom">
+          <a href="#">
+           <img src="{% static 'img.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
+          </a>
+        </div>
+      </div>
+      <div class="camera-item" id="img_item2" style="background-color:pink;">
+        <p align="center">Camera stream 2</p>
+        <div class="content-bottom">
+          <a href="#">
+             <img src="{% static 'img.png' %}" class="center"  style="border:1px solid black;width:100%" alt="Camera stream 1">
+          </a>
+        </div>
+      </div>
+  </div>
+<script>
+
+
+const divf = document.getElementById("img_item");
+const divf2 = document.getElementById("img_item2");
+const btn = document.getElementById("display")
+const  listc = document.getElementsByClassName("list-camera")
+
+function display () {
+  console.log(1232)
+  if (divf.style.display === "none") {
+    divf.style.display = "block";
+    divf2.style.display = "block";
+    console.log(12312312);
+    $('.list-camera').css({'width':'70%','height':'80%','margin':'auto'});
+    $('.camera-item').css({'height':'50%'});
+  }
+  else {
+     console.log(356662312);
+    divf.style.display="none";
+    divf2.style.display="none";
+    $('.list-camera').css({'width':'100%','height':'100vh','margin':'auto'});
+    $('.camera-item').css({'height':'unset'});
+
+  }
+};
+
+
+</script>
+{% endblock %}
+
+
+
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static '/css/home.css' %}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+{#    <script src="{% static 'js/displaycam.js' %}"></script>#}
+{% endblock %}

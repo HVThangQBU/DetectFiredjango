@@ -23,11 +23,11 @@ import cv2
 import imagezmq
 import yaml
 
-file = "demo/video2.mp4"
+file = "demo/test2.mp4"
 cap = cv2.VideoCapture(file)
-sender = imagezmq.ImageSender(connect_to='tcp://localhost:5555')
+sender = imagezmq.ImageSender(connect_to='tcp://localhost:5577')
 # change to IP address and port of server thread
-cam_id = 'Camera 1'  # this name will be displayed on the corresponding camera stream
+cam_id = 'Camera 3'  # this name will be displayed on the corresponding camera stream
 
 #stream = cap.read()
 i = 0
@@ -36,7 +36,7 @@ while True:
     if ret:
       # if a frame was returned, send it
       sender.send_image(cam_id, frame)
-      i = i +1
+      i = i+ 1
       print(i)
 
 

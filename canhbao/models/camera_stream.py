@@ -249,3 +249,4 @@ class CameraVideoStream:
         self.suspend = True
 
 ##########################################################################
+open(src=0)
