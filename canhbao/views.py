@@ -1,10 +1,12 @@
+import datetime
 import json
 from pyexpat.errors import messages
+import base64
 import time
 from importlib import import_module
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import auth, User
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 import cv2
 from django.db import connection
 from django.http import HttpResponse, StreamingHttpResponse
@@ -19,7 +21,8 @@ from django.http import HttpResponseNotFound, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from canhbao.serializers import CameraSerializer
-
+from canhbao import EmailTelegram
+import asyncio
 
 @login_required(login_url="signin")
 def index(request):
@@ -35,6 +38,7 @@ def index(request):
 
 
 @login_required(login_url="signin")
+@permission_required('canhbao.can_view_detail_camera', raise_exception=True)
 def detailCamera(request, id):
     template = loader.get_template("detail-camera.html")
     print("id chi so: ", id)
@@ -134,9 +138,10 @@ def loadDetect(request):
 def gen(camera_stream, feed_type, device):
     """Video streaming generator function."""
     unique_name = (feed_type, device)
-
+    end = 0
     num_frames = 0
     total_time = 0
+    send_detect = EmailTelegram.SendWarning()
     while True:
         time_start = time.time()
 
@@ -144,6 +149,8 @@ def gen(camera_stream, feed_type, device):
         if frame is None:
             break
 
+
+       
         num_frames += 1
         print("cam:", cam_id, " gen thread: ", num_frames)
         time_now = time.time()
@@ -160,6 +167,28 @@ def gen(camera_stream, feed_type, device):
             (0, 255, 255),
             2,
         )
+        
+        if prediction == 1:
+            print("cul", prediction)
+            print(f'\t\t|____No-Fire')
+        else:
+            # localtime = datetime.datetime.now()
+            # date_string = str(localtime.strftime("%Y-%m-%d"))
+            
+            nowT = datetime.datetime.now()
+            date_string = str(nowT.strftime("%H:%M, %d/%m/%Y"))
+            now = datetime.datetime.now().second
+            print("now, end", now, "sds", end, " sd" , int(now - end))
+            if (now != end) & (int(now) % 59 == 0):
+                end = datetime.datetime.now().second
+                # send_detect.sendEmail("hoangthangdnd870@gmail.com", date_string, "Nam Lý - Trần Hưng Đạo giao Hữu Nghị",frame)
+                # send_detect.sendTelegram("5150505079", "Nam Lý - Trần Hưng Đạo giao Hữu Nghị", date_string, frame)
+                # string = 'Tình trạng: Hiện tại đang có cháy \nĐịa điểm: Nam Lý - Trần Hưng Đạo giao Hữu Nghị  \nThời gian: ' + date_string + '\nXem hình ảnh để đánh giá và xử lý kịp thời.'
+                # asyncio.run(send_detect.send_message_async(string, frame))
+              
+                # string = 'Tình trạng: Hiện tại đang có cháy \nĐịa điểm: Nam Lý - Trần Hưng Đạo giao Hữu Nghị  \nThời gian: ' + date_string + '\nVui lòng truy cập vào website để xem  hình ảnh để đánh giá và xử lý kịp thời.'
+                # send_detect.sendSMS(string)
+       
 
         # if feed_type == 'yolo':
         #     cv2.putText(frame, "FPS: %.2f" % fps, (int(0.75 * frame.shape[1]), int(0.9 * frame.shape[0])), 0,
@@ -168,8 +197,8 @@ def gen(camera_stream, feed_type, device):
         frame = cv2.imencode(".jpg", frame)[
             1
         ].tobytes()  # Remove this line for test camera
+        
         yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
-
 
 # @login_required(login_url='signin')
 def video_feed(request, feed_type, device):
@@ -192,6 +221,7 @@ def video_feed(request, feed_type, device):
         )
 
 
+@login_required(login_url='signin')
 def video_feed_one_camera(request, feed_type, device, port):
     """Video streaming route. Put this in the src attribute of an img tag."""
 

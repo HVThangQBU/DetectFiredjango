@@ -4,6 +4,9 @@ from django.db import models
 import uuid
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import PermissionManager
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
 
 
 User = get_user_model()
@@ -41,6 +44,8 @@ class Detection(models.Model):
         super().save(*args, **kwargs)
 
 
+
+
 class CustomUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     id_user = models.IntegerField()
@@ -50,6 +55,8 @@ class CustomUser(models.Model):
     )
     phone_number = models.CharField(max_length=20)
     address = models.TextField(max_length=50, blank=True)
+    id_group = models.IntegerField(default=2)
+ 
 
     def __str__(self):
         return self.user.username
@@ -58,9 +65,12 @@ class CustomUser(models.Model):
         permissions = [
             ("view_camera", "Can view camera"),
             ("edit_camera", "Can edit camera"),
+            ("can_view_detail_camera", "Can view detail camera"),
         ]
 
-
+class CustomGroup(Group):
+    description = models.CharField(max_length=100)
 # @permission_required('canhbao.view_customuser')
+
 
 
