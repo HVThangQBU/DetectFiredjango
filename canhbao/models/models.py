@@ -72,5 +72,9 @@ class CustomGroup(Group):
     description = models.CharField(max_length=100)
 # @permission_required('canhbao.view_customuser')
 
-
+class Permission(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    camera = models.ForeignKey(Camera, on_delete=models.CASCADE)
+    can_view_by_name_came = models.BooleanField(default=False)
+    can_edit_by_name_came = models.BooleanField(default=False)
 

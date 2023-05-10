@@ -15,6 +15,7 @@ from django.template import loader
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from channels.layers import get_channel_layer
+from canhbao.decorators import require_view_permission
 from canhbao.models.models import Camera, Detection, CustomUser
 from django.forms.models import model_to_dict
 from django.http import HttpResponseNotFound, JsonResponse
@@ -27,18 +28,19 @@ import asyncio
 @login_required(login_url="signin")
 def index(request):
     user_object = User.objects.get(username=request.user.username)
-    print("ten", user_object)
+    print("ten",)
     allcam = Camera.objects.all().values()
     template = loader.get_template("home.html")
     context = {
         "allcam": allcam,
         "user_object": user_object,
+        "is_staff":  user_object.is_staff,
     }
     return HttpResponse(template.render(context, request))
 
 
 @login_required(login_url="signin")
-@permission_required('canhbao.can_view_detail_camera', raise_exception=True)
+@require_view_permission
 def detailCamera(request, id):
     template = loader.get_template("detail-camera.html")
     print("id chi so: ", id)
@@ -86,6 +88,7 @@ def detailCamera(request, id):
 
 
 @login_required(login_url='signin')
+@require_view_permission
 def detailHistory(request, id):
     template = loader.get_template("detail-history.html")
     print("id chi so: ", id)
@@ -152,10 +155,10 @@ def gen(camera_stream, feed_type, device):
 
        
         num_frames += 1
-        print("cam:", cam_id, " gen thread: ", num_frames)
+    
         time_now = time.time()
         total_time += time_now - time_start
-        fps = num_frames / total_time
+      
 
         # write camera name
         cv2.putText(
@@ -178,7 +181,7 @@ def gen(camera_stream, feed_type, device):
             nowT = datetime.datetime.now()
             date_string = str(nowT.strftime("%H:%M, %d/%m/%Y"))
             now = datetime.datetime.now().second
-            print("now, end", now, "sds", end, " sd" , int(now - end))
+          
             if (now != end) & (int(now) % 59 == 0):
                 end = datetime.datetime.now().second
                 # send_detect.sendEmail("hoangthangdnd870@gmail.com", date_string, "Nam Lý - Trần Hưng Đạo giao Hữu Nghị",frame)

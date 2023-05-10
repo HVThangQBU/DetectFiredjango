@@ -2,12 +2,12 @@ from imutils.video import VideoStream, WebcamVideoStream
 import imagezmq
 
 
-path = "rtsp://user:Admin123@ndhoa92camhaithanhltd.ddns.net:554/profile2/media.smp"  # change to your IP stream address
+path = "rtsp://user:Admin123@camxathaidonghai2.ddns.net:554/profile2/media.smp"  # change to your IP stream address
 cap = VideoStream(path)
 
 
-sender = imagezmq.ImageSender(connect_to='tcp://localhost:5555')  # change to IP address and port of server thread
-cam_id = 'Camera 1'  # this name will be displayed on the corresponding camera stream
+sender = imagezmq.ImageSender(connect_to='tcp://localhost:5588')  # change to IP address and port of server thread
+cam_id = 'Camera 4'  # this name will be displayed on the corresponding camera stream
 
 stream = cap.start()
 i = 0
