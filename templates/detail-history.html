@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Camera detail{% endblock %}
+{% block title %}Camera history{% endblock %}
 
 {% block content %}
 <div id="main">
@@ -14,7 +14,8 @@
         <div class="abc">
           <div class="camera big-img">
               <img src="http://127.0.0.1:8000/media/{{detect_last.image_detect}}" alt="hinhanh" class="center" style="width:100%; height: 800px;">
-              <h3 align="center">Hình ảnh cảnh báo</h3>
+              <h3 align="center">Hình ảnh cảnh báo {{camera.name_cam}}</h3>
+              <h3 align="center">vị trí {{camera.location}}</h3>
             </div>
           {% comment %} <div class="log-detail">
               {% comment %} <div class="log"> {% endcomment %}
@@ -50,18 +51,38 @@
           </div>   {% endcomment %}
           <form action="" method="POST">
             {% csrf_token %}
-          <div style="display:flex">
+          <div style="display:flex;     padding: 10px;
+          margin: 2px;">
             <div>
-              <label for="start-picker">Select Start Date and Time:</label>
-              <input type="text" id="start-picker" placeholder="Select Start Date and Time">
+              <label for="start-picker" style="margin-left: 28px;">Select Start Date:</label>
+              <input type="text" id="start-picker" placeholder="Select Start Date" style="    background: #41486a;
+              color: white;
+              padding: 5px;
+              border-radius: 10px;
+              border: none; text-align: center;">
             </div>
           
             <div>
-                <label for="end-picker">Select End Date and Time:</label>
-                <input type="text" id="end-picker" placeholder="Select End Date and Time">
+                <label for="end-picker" style="margin-left: 28px;">Select End Date:</label>
+                <input type="text" id="end-picker" placeholder="Select End Date" style="    background: #41486a;
+                color: white;
+                padding: 5px;
+                border-radius: 10px;
+                border: none; text-align: center;">
             </div>
+            <div>
+            <button id="search-btn" style="width: 75px;
+            height: 30px;
+        
+            background: #41486a;
+            outline: none;
+            border: none;
+            border-radius: 10px;
+            text-align: center;
           
-            <button id="search-btn" >Search</button>
+            color: white;
+            margin-top: 27px;" >Search</button>
+          </div>
           </div>
         </form>
           <div id="display-log" style="overflow-y: auto; max-height: 85vh;">
@@ -221,19 +242,16 @@ $(document).on('click', '.log-canhbao', function(){
             minute: 'numeric',
             hour12: true
           });
-
-         
-    
             var html =   " <div class='log-canhbao'><div class='log-img'>"
               + "<img src='" + {{ MEDIA_URL }} + det.image_detect + "' alt='' class='center' style='width:150px; height: 100px;'></div><div class='log-content'><p class='log-content-name'> Tên cảnh báo:  <span>" +
                 det.name_detect + "</span></p><p class='log-content-time'> Thời gian: <span>" +
                   formattedTime + "</span></p><p class='log-content-location'> Vị trí:        <span>Đồng hới</span></p></div> </div>";
           $("#display-log").prepend(html);
-
-
           
         }
       } else {
+        html = "<div class='log-canhbao'><div class='log-img center'><p>Không có cảnh báo nào trong khoảng thời gian này!</p></div> </div>";
+        $("#display-log").prepend(html);
         // Display message if no results found
         searchResults.innerHTML = "<p>No results found.</p>";
       }

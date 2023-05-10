@@ -5,162 +5,153 @@
 
 
 {% block content %}
-<div class="container" style="max-width: none">
-    <div class="button-container">
-        <button class="active" onclick="showVideos(9)">9</button>
-        <button onclick="showVideos(6)">6</button>
-        <button onclick="showVideos(3)">3</button>
-        <button onclick="showVideos(1)">1</button>
-       
-    </div>
-    <div class="video-grid">
-
-        {% for x in allcam %}
-        <div class="video">
-            <a href="detail_camera/{{ forloop.counter0 }}">
-                <img src="{% url 'video_feed' feed_type='camera' device=forloop.counter0 %}" class="center"  style="border:1px solid black;width:100%" alt="Camera stream 1">
-            <h2>{{ x.name_cam }}</h2>
-            </a>
-        </div>
-        {% endfor %}
-
-        <div class="video">
-            <a href="#">
-                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
-            <h2>Video 3</h2>
-            </a>
-        </div>
-        <div class="video">
-            <a href="#">
-                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
-                <h2>Video 4</h2>
-            </a>
-
-        </div>
-        <div class="video">
-            <a href="#">
-                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
-                <h2>Video 5</h2>
-            </a>
-        </div>
-        <div class="video">
-            <a href="#">
-                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
-                <h2>Video 6</h2>
-            </a>
-        </div>
-        <div class="video">
-            <a href="#">
-                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
-                <h2>Video 7</h2>
-            </a>
-        </div>
-        <div class="video">
-            <a href="#">
-                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
-                <h2>Video 8</h2>
-            </a>
-        </div>
-        <div class="video">
-            <a href="#">
-                <img src="{% static 'novideo.png' %}" class="center"  style="border:1px solid black;width:100%;" alt="Camera stream 1">
-                <h2>Video 9</h2>
-            </a>
-        </div>
-    </div>
-</div>
 
 
+  <div class="camera-container">
 
-<script>
-  function showVideos(num) {
-    // Lấy tất cả các video trên trang
-    const videos = document.querySelectorAll('.video');
+    <div class="camera-main-list">
+      <div class="camera-main-item" id="main-first">
+        <img id="img-main" src="{% static 'novideo.jpg' %}" class="center" style="border: 1px solid #af4c4c00; width: 100%;" alt="Camera stream">
+      </div>
+    
 
-    // Ẩn tất cả các video
-    videos.forEach(video => {
-      video.style.display = 'none';
-    });
+      <div class="camera-main-item" id="main-second">
+        <img id="img-main img-main-second" src="{% static 'novideo.jpg' %}" class="center" style="border: 1px solid #af4c4c00; width: 100%" alt="Camera stream">
+      </div>
+    
+      <div class="camera-main-item" id="main-third">
+        <img id="img-main" src="{% static 'novideo.jpg' %}" class="center" style="border: 1px solid #af4c4c00; width: 100%" alt="Camera stream">
+      </div>
+  
+      <div class="camera-main-item" id="main-four">
+        <img id="img-main" src="{% static 'novideo.jpg' %}" class="center" style="border: 1px solid #af4c4c00; width: 100%" alt="Camera stream">
+      </div>
+     
+    </div>  
+    <div class="camera-list">
+      {% for x in allcam %}
+        <div class="camera-item" id="item-5" style="display:flex; align-items: center;" >
+          <img src="{% url 'video_feed' feed_type='camera' device=forloop.counter0 %}" class="center" style="border: 1px solid #af4c4c00; width: 80%" alt="Camera stream">
+          <a href="/detail_camera/{{ forloop.counter0 }}">
+          <div>Xem chi tiết {{ x.name_cam }}</div>
+          </a>
+        </div>
+      {% endfor %}   
+    </div> 
 
-    // Hiển thị số lượng video tương ứng
-    for (let i = 0; i < num; i++) {
-      videos[i].style.display = 'block';
+  </div> 
+    
+
+
+ <script>
+
+  window.addEventListener('load', function() {
+    const mainFirst = document.getElementById('main-first');
+    const mainSecond = document.getElementById('main-second');
+    const mainThird = document.getElementById('main-third');
+    const mainFour = document.getElementById('main-four');
+    const cameraItems = document.querySelectorAll('.camera-item');
+    
+    let mainCamera = mainFirst; // mặc định mainCamera là mainFirst
+    
+    const switchMainCamera = function(url) {
+      mainCamera.querySelector('img').src = url;
     }
-
-    // Cập nhật trạng thái của các nút điều chỉnh hiển thị
-    const buttons = document.querySelectorAll('.button-container button');
-    buttons.forEach(button => {
-      if (button.innerHTML === num.toString()) {
-        button.classList.add('active');
-      } else {
-        button.classList.remove('active');
-      }
+    
+    cameraItems.forEach(function(item) {
+      item.addEventListener('click', function() {
+        const imgItem = item.querySelector('img');
+        switchMainCamera(imgItem.src);
+      });
     });
-
-    // Căn giữa các video còn lại (nếu có)
-    const remainingVideos = document.querySelectorAll('.video:not(:first-child):not(:nth-child(2)):not(:nth-child(3))');
-    remainingVideos.forEach(video => {
-      video.style.margin = '0 auto';
+    
+    mainFirst.addEventListener('click', function() {
+      mainCamera = mainFirst; // gán mainCamera là mainFirst khi click vào mainFirst
     });
-  }
-</script>
+    
+    mainSecond.addEventListener('click', function() {
+      mainCamera = mainSecond; // gán mainCamera là mainSecond khi click vào mainSecond
+    });
+    mainThird.addEventListener('click', function() {
+      mainCamera = mainThird; // gán mainCamera là mainSecond khi click vào mainSecond
+    });
+  
+    mainFour.addEventListener('click', function() {
+      mainCamera = mainFour; // gán mainCamera là mainSecond khi click vào mainSecond
+    });
+  });
+  
+
+</script> 
+
 {% endblock %}
 
 {% block extra_css %}
 <style>
-    /* Căn giữa nội dung trang */
-    .container {
-      margin: 0 auto;
-      max-width: 1200px;
-      padding: 20px;
-    }
 
-    /* Thanh Navigation */
-    nav {
-      background-color: #333;
-      color: #fff;
-      display: flex;
-      justify-content: space-between;
-      padding: 10px;
-    }
+  .camera-container {
+    display: flex;
+    margin: 5px;
+    justify-content: center;
+    align-items: center;
+  
+  }
+  
+  /*.camera-main {
+    width: 70%;
+    margin-right: 10px;
+    height: 100%;
+  }*/
+  
+  .camera-main-list {
+    width: 85%;
+    margin-right: 10px;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+    margin-top : 0px;
+  }
+  
+  .camera-main-item{
+    width: 50%;
+   
+    text-align: center;
+    flex-basis: 50%;
+    flex-grow: 0;
+    height: 20%;
+  }
+  .camera-main img {
+    width: 100%;
+    border: 1px solid black;
+    height: 80%;
+  }
+  
+  .camera-list {
+    width: 15%;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+    margin-top : 0px;
+    overflow-y: scroll; 
+      overflow-x: hidden;
+    max-height: 100vh;
+  }
+  
+  .camera-item {
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: center;
+    flex-grow: 0;
+    height: 20%;
+  }
+  
+  .camera-item img {
+    width: 100%;
+    border: 1px solid black;
+  }
+  
 
-    /* Khung ảnh */
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-gap: 20px;
-      margin-bottom: 20px;
-    }
-    .video {
-      background-color: #eee;
-      padding: 20px;
-      text-align: center;
-    }
 
-    /* Footer */
-    footer {
-      background-color: #333;
-      color: #fff;
-      padding: 10px;
-      text-align: center;
-    }
-
-    /* Nút điều chỉnh hiển thị */
-    .button-container {
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    button {
-      background-color: #333;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      margin-right: 5px;
-      padding: 10px 20px;
-    }
-    button.active {
-      background-color: #fff;
-      color: #333;
-    }
-  </style>
+  </style> 
 {% endblock %}

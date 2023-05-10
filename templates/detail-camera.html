@@ -4,6 +4,10 @@
 
 
 {% block content %}
+<!-- Mapbox-->
+
+
+
 <div id="main">
 <input type="hidden" id ="idcamera" value="{{camera.id_cam}}">
   <div class="content">
@@ -12,11 +16,13 @@
         <div class="camera video-player" style="width: 100%; height: 100%" >
           <img src="{% url 'video_feed_one_camera' feed_type='camera' device=index_cam port=camera.port  %}"  alt="Camera stream 1" class="center"  id="my-video" controls>
           <div class="controls">
-            <button id="play-pause-btn"><i class="fas fa-play"></i></button>
+            <button id="play-pause-btn" style="display: none;"><i class="fas fa-play"></i></button>
             <button id="fullscreen-btn"><i class="fas fa-expand"></i></button>
           </div>
-          <h3 align="center">{{ camera.name_cam}} {{ camera.name_location }} index {{ index_cam }} id {{ camera.id_cam }}</h3>
-          <a href="https://www.mapbox.com/directions?origin=20.9825201,105.838343&destination=20.9825201,105.838343&geometries=geojson&access_token=pk.eyJ1IjoiYmx1ZXJoaW5vIiwiYSI6ImNqZDJjYjZxeDFzcHUzM213MGdoOTh4dXUifQ.0St02mA2vqSMM5qsvMfngQ">Chỉ đường</a>
+          <h3 align="center">{{ camera.name_cam}}  </h3>
+          <h3 align="center">VỊ TRÍ {{ camera.name_location }} </h3>
+          <h3 id="user-location" data-lat="{{ camera.latitude }}" data-lng="{{ camera.longitude }}"><a href="#"> VỊ TRÍ CỦA BẠN TRÊN GOOGLE MAPS</a></h3>
+          
         </div>
        {% comment %} <div id="map">
           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3805.5426005532345!2d106.6049806507262!3d17.
@@ -49,28 +55,7 @@
       </div> {% endcomment %}
       <div class="content-right" id ="load-content">
         <div class="camera" style="margin: 0;">
-          {% comment %} <h3 align="center">Cảnh báo</h3>
-          <div class="log-canhbao-title">
-            <div class="log-content">
-              <div class="log-img">
-                <label for="party">Từ ngày:</label>
-                <input
-                  id="time-start"
-                  type="datetime-local"
-                  name="partydate" />
-              </div>
-            </div>
-            <div class="log-img">
-                <label for="party">Đến ngày:</label>
-                <input
-                  id="time-end"
-                  type="datetime-local"
-                  name="partydate"
-                  />
-            </div>
-              <input id="submit-time" type="submit">
-          </div>   {% endcomment %}
-          <div id="display-log" style="overflow-y: auto; max-height: 85vh;">
+          <div id="display-log" style="overflow-y: auto; max-height: 83vh;">
             {% for det in detect  %}
               <div class="log-canhbao">
                 <div class="log-img">
@@ -84,7 +69,12 @@
               </div>
             {% endfor %}
           </div>
-          <h3>Lịch sử cảnh báo </h3> <a href="/detail_history/{{ index_cam }}">Xem lịch sử</a>
+          <a href="/detail_history/{{ index_cam }}">
+            <div style="background: #bdff1b; padding: 1px; border-radius: 35px; display: flex; justify-content: center; align-items: center; height: 30px; margin:auto; width:260px; margin-top:10px">
+              <h5 style="text-transform: uppercase">Xem chi tiết lịch sử</h5> 
+            </div>
+          </a>
+          
         </div>
       </div>
     </div>
@@ -146,7 +136,7 @@ $(document).ready(function() {
            var html =   " <div class='log-canhbao'><div class='log-img'>"
               + "<img src='" + {{ MEDIA_URL }} + dct.image_detect + "' alt='' class='center' style='width:150px; height: 100px;'></div><div class='log-content'><p class='log-content-name'> Tên cảnh báo:  <span>" +
                 dct.name_detect + "</span></p><p class='log-content-time'> Thời gian: <span>" +
-                  todayDate + "</span></p><p class='log-content-location'> Vị trí:        <span>Đồng hới</span></p></div> </div>"; 
+                  todayDate + "</span></p></div> </div>"; 
           $("#display-log").prepend(html);
           }
 
@@ -203,16 +193,16 @@ fullscreenBtn.addEventListener('click', () => {
   
   .controls {
     position: absolute;
-    bottom: 50px;
-    left: 0;
+    bottom: 100px;
+    right: 0;
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: right;
     align-items: center;
   }
   
   button {
-    background-color: #d97c11;
+    background-color: #d97c1100;
     color: #fff;
     border: none;
     font-size: 1.5rem;
@@ -227,6 +217,7 @@ fullscreenBtn.addEventListener('click', () => {
 {% block extra_css %}
 <meta charset="UTF-8">
 <link rel="stylesheet" href="{% static '/css/detail-camera.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-...">
 <style>
   label {
     display: inline-block;
@@ -250,6 +241,73 @@ label {
     height: 100%;
   }
 </style>
+
+<!-- Mapbox-->
+<script
+src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
+<link rel="stylesheet"
+href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.css"
+type="text/css">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js"></script>
+<script
+src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+<link rel="stylesheet"
+href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css"
+type="text/css">
+
+
+<script>
+  //mapbox acces token
+  mapboxgl.accessToken =
+    "pk.eyJ1IjoiYmx1ZXJoaW5vIiwiYSI6ImNqZDJjYjZxeDFzcHUzM213MGdoOTh4dXUifQ.0St02mA2vqSMM5qsvMfngQ";
+
+    function getUserLocation() {
+      return new Promise(function (resolve, reject) {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            function (position) {
+              var lng = position.coords.longitude;
+              var lat = position.coords.latitude;
+              var startPoint = [lng, lat];
+              resolve(startPoint);
+            },
+            function (error) {
+              reject(error);
+            }
+          );
+        } else {
+          reject("Geolocation is not supported by this browser.");
+        }
+      });
+    }
+    
+    // in vị trí hiện tại của người dùng ra console
+    getUserLocation()
+      .then(function(startPoint) {
+        var userLocationElement = document.getElementById("user-location");
+        console.log("Vị trí hiện tại của bạn là: ", startPoint[0]);
+        var userLocationElement = document.getElementById("user-location");
+        var latitude = userLocationElement.dataset.lat;
+        var longitude = userLocationElement.dataset.lng;
+        var destination = latitude + "," + longitude;
+        userLocationElement.innerHTML = `<a href="https://www.google.com/maps/dir/?api=1&origin=${startPoint[1]},${startPoint[0]}&destination=${latitude},${longitude}&travelmode=driving" target="_blank">Vị trí của bạn trên Google Maps</a>`;
+       
+        console.log("Vị trí hiện tại của bạn là: ", startPoint);
+
+       // userLocationElement.textContent = "Vị trí của bạn: " + startPoint[0] + ", " + startPoint[1];
+        
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+    
+   
+</script>
+
+
+
+
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script src="http://stevenlevithan.com/assets/misc/date.format.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>

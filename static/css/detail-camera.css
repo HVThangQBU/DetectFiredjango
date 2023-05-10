@@ -33,7 +33,7 @@ body {
 h3 {
       color: rgb(126, 26, 51);
       text-transform: uppercase;
-      margin: 15px 5px 5px 5px;
+      margin: 5px 5px 5px 5px;
       text-align: center;
 }
 #nav {
@@ -67,7 +67,7 @@ h3 {
 }
 #content-center {
    display: flex;
-   margin-top: 30px !important;
+   margin-top: 15px !important;
    width: 100%;
 }
 .content-right {
