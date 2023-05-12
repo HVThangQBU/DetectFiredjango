@@ -43,7 +43,8 @@ def index(request):
 @require_view_permission
 def detailCamera(request, id):
     template = loader.get_template("detail-camera.html")
-    print("id chi so: ", id)
+    print("id chi so: ", id -1)
+    id = id - 1
     queryset = Camera.objects.all()
     id_cam = queryset[id].id_cam
 
@@ -90,6 +91,7 @@ def detailCamera(request, id):
 @login_required(login_url='signin')
 @require_view_permission
 def detailHistory(request, id):
+    id = id -1
     template = loader.get_template("detail-history.html")
     print("id chi so: ", id)
     queryset = Camera.objects.all()
