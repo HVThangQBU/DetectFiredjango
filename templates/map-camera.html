@@ -45,16 +45,17 @@
 
 <style>
   #map {
-    width: 83vw;
-    height: 79.7vh;
+    {% comment %} width: 80vw;
+    height: 79.7vh; {% endcomment %}
+    height: 100%;
   }
 
   .view-container {
     display: flex;
     {% comment %} justify-content: space-evenly; {% endcomment %}
     border: 1px solid black;
-    height: 80vh;
-    width: 100%%;
+    height: 87vh;
+    width: 100%;
   }
 
   .side-bar-container {
@@ -150,13 +151,16 @@
     margin-top: 0;
     margin-bottom: 0;
   }
+  footer {
+    position: fixed;
+  }
 </style>
 {% endblock %}
 
 
 
 {% block content %}
-<div class="container" style="max-width: none">
+<div class="container" style="max-width: none; margin-top: 20px">
 <div class="view-container">
   <div class="side-bar-container">
     <div class="side-bar-header">
@@ -172,7 +176,7 @@
       <div class="list-group"></div>
     </nav>
   </div>
-  <div class="map-container">
+  <div class="map-container" style="width:100%";>
     <div id="map" class="map"></div>
   </div>
 </div>
@@ -188,7 +192,8 @@
     container: "map",
     style: "mapbox://styles/bluerhino/cjd2cc3t53a1y2sp3cuz1w6hk",
     center: [105.85607, 15.868349],
-    zoom: 3,
+    zoom: 2.5,
+    essential: true
   });
 
   map.loadImage(
@@ -286,8 +291,8 @@
             };
           }),
         },
-        cluster: true,
-        clusterMaxZoom: 14, // Zoom tối đa để giữ nguyên các điểm riêng lẻ
+        cluster: false,
+        clusterMaxZoom: 25, // Zoom tối đa để giữ nguyên các điểm riêng lẻ
         clusterRadius: 50, // Bán kính cụm tính bằng pixel trên màn hình
       });
 
@@ -324,15 +329,19 @@
         },
       });
 
+      map.removeLayer('store-clusters');
+      map.removeLayer('store-cluster-count');
+
       //add agency point
       map.addLayer({
         id: "store-point",
         type: "symbol",
         source: "store-locations",
-        filter: ["!", ["has", "point_count"]],
+       // filter: ["!", ["has", "point_count"]],
         layout: {
           "icon-image": "vcx", // Đường dẫn đến file ảnh
-          "icon-size": 0.1, // Kích thước của icon, 0.5 tương đương 50%
+          "icon-size": 0.3, // Kích thước của icon, 0.5 tương đương 50%
+         
         },
       });
 

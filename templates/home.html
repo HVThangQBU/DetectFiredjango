@@ -33,7 +33,7 @@
         <div class="camera-item" id="item-5" style="display:flex; align-items: center;" >
           <img src="{% url 'video_feed' feed_type='camera' device=forloop.counter0 %}" class="center" style="border: 1px solid #af4c4c00; width: 80%" alt="Camera stream">
           <a href="/detail_camera/{{ forloop.counter0 }}">
-          <div>Xem chi tiết {{ x.name_cam }}</div>
+          <div>{{ forloop.counter0 }} Xem chi tiết {{ x.name_cam }}</div>
           </a>
         </div>
       {% endfor %}   
